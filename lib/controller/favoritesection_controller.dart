@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-class FavoritesectionController with ChangeNotifier 
+class FavoritesectionController with ChangeNotifier {
   static late Database database;
   List<Map<String, dynamic>> FavStore = [];
 
