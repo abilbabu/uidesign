@@ -11,7 +11,7 @@ class CartScreenController with ChangeNotifier {
   List<Map<String, dynamic>> storedProducts = [];
 
   static Future initDb() async {
-    database = await openDatabase("cartdb2.Db", version: 1,
+    database = await openDatabase("cartdatabase.Db", version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
           'CREATE TABLE Cart (id INTEGER PRIMARY KEY, title TEXT,qty INTEGER ,price REAL,image TEXT,productId INTEGER)');

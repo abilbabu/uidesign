@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:uidesign/controller/cartscreen_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
-import 'package:uidesign/utils/constants/image_constants.dart';
-import 'package:uidesign/view/home_screen/home_screen.dart';
+import 'package:uidesign/view/home_screen/Widgets/customAppbar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -16,48 +15,11 @@ class CartScreen extends StatelessWidget {
         builder: (context, cartController, child) {
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 80, left: 25, right: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: ColorConstants.textDescriptiontextcolor,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    const Center(
-                      child: Text(
-                        "Cart",
-                        style: TextStyle(
-                          color: ColorConstants.textcolor,
-                          fontSize: 20,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child:
-                            Image(image: AssetImage(ImageConstants.cartlogo))),
-                  ],
-                ),
+              const SizedBox(
+                height: 40,
+              ),
+              CustomAppBar(
+                title: "cart",
               ),
               // Main cart list
               Expanded(

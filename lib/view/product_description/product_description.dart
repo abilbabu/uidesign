@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
-import 'package:uidesign/view/home_screen/home_screen.dart';
+import 'package:uidesign/view/home_screen/Widgets/customAppbar.dart';
 
 class ProductDescription extends StatefulWidget {
   final int productId;
@@ -69,40 +69,7 @@ class _ProductDescriptionState extends State<ProductDescription> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor:
-                                      ColorConstants.textDescriptiontextcolor,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomeScreen(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: Image.asset("assets/image/Cart.png"),
-                                ),
-                              ],
-                            ),
-                          ),
+                          CustomAppBar()
                         ],
                       ),
                       // Product Info Section
@@ -198,7 +165,7 @@ class _ProductDescriptionState extends State<ProductDescription> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(height: 40),
+                            const SizedBox(height: 80),
                           ],
                         ),
                       ),
