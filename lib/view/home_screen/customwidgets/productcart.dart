@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/cartscreen_controller.dart';
-import 'package:uidesign/model/productModel/productModel.dart';
+import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
+import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/product_description/product_description.dart';
 
-class ProductCart extends StatelessWidget {
+class ProductCart extends StatefulWidget {
   final String image;
   final String title;
   final String description;
@@ -23,6 +24,13 @@ class ProductCart extends StatelessWidget {
   });
 
   @override
+  State<ProductCart> createState() => _ProductCartState();
+}
+
+class _ProductCartState extends State<ProductCart> {
+  bool _isFavorited = false;
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -30,7 +38,7 @@ class ProductCart extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDescription(
-              productId: productId,
+              productId: widget.productId,
             ),
           ),
           (route) => false,
@@ -56,7 +64,7 @@ class ProductCart extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                          image: NetworkImage(image),
+                          image: NetworkImage(widget.image),
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -66,21 +74,44 @@ class ProductCart extends StatelessWidget {
                     right: 5,
                     top: 10,
                     child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.favorite_border,
+                      onPressed: () {
+                        setState(() {
+                          _isFavorited = !_isFavorited;
+                        });
+
+                        final fav = {
+                          "title": widget.title,
+                          "description": widget.description,
+                          "image": widget.image,
+                          "price": widget.price,
+                          "productId": widget.productId,
+                        };
+                        if (_isFavorited) {
+                          context.read<FavoritesectionController>().addFav(fav);
+                        } else {
+                          context
+                              .read<FavoritesectionController>()
+                              .removefav(widget.productId);
+                        }
+                        context.read<FavoritesectionController>().getfavorite();
+                      },
+                      icon: Icon(
+                        _isFavorited ? Icons.favorite : Icons.favorite_border,
                         size: 25,
+                        color: _isFavorited
+                            ? Colors.red
+                            : ColorConstants.textDescriptiontextcolor,
                       ),
                     ),
                   ),
                 ],
               ),
-              Text(title,
+              Text(widget.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppStyle.getPriceTextStyle(
                       fontSize: 18, color: ColorConstants.textcolor)),
-              Text(description,
+              Text(widget.description,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppStyle.getSubTextStyle(
@@ -90,18 +121,18 @@ class ProductCart extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("\$${price.toString()}",
+                  Text("\$${widget.price.toString()}",
                       style: AppStyle.getPriceTextStyle(
                           fontSize: 15, color: ColorConstants.textcolor)),
                   InkWell(
                     onTap: () {
-                      final product = ProductModel(
-                        image: image,
-                        title: title,
-                        description: description,
-                        price: price,
-                      );
-                      context.read<CartScreenController>().addProduct(product);
+                      // Add product to cart and navigate to CartScreen
+                      context.read<CartScreenController>().getAllProduct();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CartScreen(),
+                          ));
                     },
                     child: const CircleAvatar(
                       radius: 22,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/utils/constants/image_constants.dart';
 import 'package:uidesign/view/cart_screen/cart_screen.dart';
-import 'package:uidesign/view/home_screen/Widgets/drawerButton.dart';
-import 'package:uidesign/view/home_screen/Widgets/productcart.dart';
+import 'package:uidesign/view/home_screen/customwidgets/drawerButton.dart';
+import 'package:uidesign/view/home_screen/customwidgets/productcart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,12 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        drawer: const DrawerButtonscreen());
+        drawer:const DrawerButtonscreen()); 
   }
 
   Widget _buildCategorySection() {
-    return Consumer<HomescreenController>(
-      builder: (context, categoryController, child) {
+    return Consumer<FavoritesectionController>(
+      builder: (context, FavoriteController, child) {
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -64,85 +65,95 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: ColorConstants.boxShadow),
-              child: Stack(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: const DecorationImage(
-                              image: AssetImage("assets/image/download.jpeg"),
-                              fit: BoxFit.fill,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                  children: List.generate(
+                FavoriteController.FavStore.length,
+                (index) {
+                  final favoriteItem = FavoriteController.FavStore[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: ColorConstants.boxShadow),
+                      child: Stack(
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image:
+                                          NetworkImage(favoriteItem["image"]),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(favoriteItem["title"],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyle.getTextStyle(
+                                            fontSize: 18,
+                                            color: ColorConstants.textcolor)),
+                                    Text(favoriteItem["description"],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyle.getSubTextStyle(
+                                            fontSize: 16,
+                                            color: ColorConstants
+                                                .textDescriptiontextcolor)),
+                                    Text('\$${favoriteItem["price"]}',
+                                        style: AppStyle.getPriceTextStyle(
+                                            fontSize: 16,
+                                            color: ColorConstants.textcolor)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("title",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppStyle.getTextStyle(
-                                    fontSize: 18,
-                                    color: ColorConstants.textcolor)),
-                            Text("description",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppStyle.getSubTextStyle(
-                                    fontSize: 16,
-                                    color: ColorConstants
-                                        .textDescriptiontextcolor)),
-                            Text('\$ price',
-                                style: AppStyle.getPriceTextStyle(
-                                    fontSize: 16,
-                                    color: ColorConstants.textcolor)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                  );
+                },
+              ))),
         ]);
       },
     );
@@ -250,7 +261,8 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               _scaffoldKey.currentState?.openDrawer();
             },
-            child: const Image(image: AssetImage(ImageConstants.drawer)),
+            child: Image(
+                image: AssetImage(ImageConstants.drawer)), // Removed const
           ),
           Container(
             padding:
@@ -259,7 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Image(image: AssetImage(ImageConstants.profile)),
+            child: Image(
+                image: AssetImage(ImageConstants.profile)), // Removed const
           ),
         ],
       ),

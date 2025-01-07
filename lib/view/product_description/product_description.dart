@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
-import 'package:uidesign/view/home_screen/Widgets/customAppbar.dart';
+import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
 
 class ProductDescription extends StatefulWidget {
   final int productId;
