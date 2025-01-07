@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
+import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/view/home_screen/Widgets/customAppbar.dart';
 
@@ -81,49 +82,32 @@ class _ProductDescriptionState extends State<ProductDescription> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  '\$ ${value.product!.price.toString()}',
-                                  style: const TextStyle(
-                                    color: ColorConstants.redcolor,
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
+                                Text('\$ ${value.product!.price.toString()}',
+                                    style: AppStyle.getPriceTextStyle(
+                                        fontSize: 20,
+                                        color: ColorConstants.redcolor)),
                                 const Spacer(),
                                 const Icon(
                                   Icons.star,
                                   color: ColorConstants.yellowcolor,
                                 ),
-                                Text(
-                                  value.product!.rating!.rate.toString(),
-                                  style: const TextStyle(
-                                    color: ColorConstants.textcolor,
-                                    fontSize: 18,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
+                                Text(value.product!.rating!.rate.toString(),
+                                    style: AppStyle.getTextStyle(
+                                        fontSize: 18,
+                                        color: ColorConstants.textcolor)),
                               ],
                             ),
                             const SizedBox(height: 10),
-                            Text(
-                              value.product!.title.toString(),
-                              style: const TextStyle(
-                                color: ColorConstants.textcolor,
-                                fontSize: 20,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                            Text(value.product!.title.toString(),
+                                style: AppStyle.getTextStyle(
+                                    fontSize: 20,
+                                    color: ColorConstants.textcolor)),
                             const SizedBox(height: 20),
-                            const Text(
+                            Text(
                               'Color Options',
-                              style: TextStyle(
-                                color: Color(0xFF1E1F2E),
+                              style: AppStyle.getTextStyle(
                                 fontSize: 14,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500,
+                                color: ColorConstants.textcolor,
                               ),
                             ),
                             const Row(
@@ -145,26 +129,19 @@ class _ProductDescriptionState extends State<ProductDescription> {
                               ],
                             ),
                             const SizedBox(height: 40),
-                            const Text(
+                            Text(
                               "Description",
-                              style: TextStyle(
-                                color: ColorConstants.textcolor,
+                              style: AppStyle.getTextStyle(
                                 fontSize: 18,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w900,
+                                color: ColorConstants.textcolor,
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text(
-                              value.product!.description.toString(),
-                              style: const TextStyle(
-                                color: ColorConstants.textDescriptiontextcolor,
-                                fontStyle: FontStyle.italic,
-                                fontSize: 16,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                            Text(value.product!.description.toString(),
+                                style: AppStyle.getSubTextStyle(
+                                    fontSize: 16,
+                                    color: ColorConstants
+                                        .textDescriptiontextcolor)),
                             const SizedBox(height: 80),
                           ],
                         ),
@@ -186,20 +163,19 @@ class _ProductDescriptionState extends State<ProductDescription> {
                   ),
                   child: InkWell(
                     onTap: () {},
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.add,
                           color: Colors.white,
                           size: 30,
                         ),
                         Text(
                           'Add to Cart',
-                          style: TextStyle(
-                            color: Colors.white,
+                          style: AppStyle.getTextStyle(
                             fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                            color: ColorConstants.whitecolor,
                           ),
                         ),
                       ],

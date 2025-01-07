@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/utils/constants/image_constants.dart';
 import 'package:uidesign/view/home_screen/home_screen.dart';
 
 class CustomAppBar extends StatelessWidget {
-  final String? title; 
-  
+  final String? title;
+
   const CustomAppBar({
-    Key? key, 
+    Key? key,
     this.title,
   }) : super(key: key);
 
@@ -37,20 +38,13 @@ class CustomAppBar extends StatelessWidget {
               ),
             ),
           ),
-          title != null 
-          ? Center(
-              child: Text(
-                title!,
-                style: const TextStyle(
-                  color: ColorConstants.textcolor,
-                  fontSize: 20,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            )
-          : const SizedBox.shrink(),
-          
+          title != null
+              ? Center(
+                  child: Text(title!,
+                      style: AppStyle.getPriceTextStyle(
+                          fontSize: 20, color: ColorConstants.textcolor)),
+                )
+              : const SizedBox.shrink(),
           const SizedBox(
               width: 40,
               height: 40,

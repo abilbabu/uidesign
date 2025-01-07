@@ -46,22 +46,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        drawer:const DrawerButtonscreen());
+        drawer: const DrawerButtonscreen());
   }
 
   Widget _buildCategorySection() {
     return Consumer<HomescreenController>(
       builder: (context, categoryController, child) {
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: Text(
               'Categories',
-              style: TextStyle(
+              style: AppStyle.getTextStyle(
+                fontSize: 28,
                 color: ColorConstants.textcolor,
-                fontSize: 26,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -154,15 +152,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           child: Text(
             'Explore',
-            style: TextStyle(
+            style: AppStyle.getTextStyle(
+              fontSize: 28,
               color: ColorConstants.textcolor,
-              fontSize: 26,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -212,7 +208,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 hintStyle: AppStyle.getSubTextStyle(
                     fontSize: 14,
                     color: ColorConstants.textDescriptiontextcolor),
-                prefixIcon:const Image(image: AssetImage(ImageConstants.searchlogo)),
+                prefixIcon:
+                    const Image(image: AssetImage(ImageConstants.searchlogo)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(
@@ -253,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               _scaffoldKey.currentState?.openDrawer();
             },
-            child:const Image(image: AssetImage(ImageConstants.drawer)),
+            child: const Image(image: AssetImage(ImageConstants.drawer)),
           ),
           Container(
             padding:
@@ -262,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black,
               borderRadius: BorderRadius.circular(10),
             ),
-            child:const Image(image: AssetImage(ImageConstants.profile)),
+            child: const Image(image: AssetImage(ImageConstants.profile)),
           ),
         ],
       ),

@@ -5,6 +5,7 @@ class ColorConstants {
   static const Color textcolor = Color(0xFF000000);
   static const Color redcolor = Color(0xFFFD6867);
   static const Color yellowcolor = Colors.amber;
+  static const Color whitecolor = Colors.white;
 
   static const List<BoxShadow> boxShadow = [
     BoxShadow(
