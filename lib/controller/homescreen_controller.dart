@@ -16,7 +16,7 @@ class HomescreenController with ChangeNotifier {
   ];
   String selectedCategory = "electronics";
   bool isloading = false;
-  bool isProductloading = false;
+  
 
   //* Fetching products (limited to 8)
   Future<void> getproduct() async {
@@ -39,6 +39,8 @@ class HomescreenController with ChangeNotifier {
 
   //* Fetching categories
   Future<void> getCategory() async {
+    isloading = true;
+    notifyListeners();
     final url = Uri.parse(ApiServices.categoryUrl);
     try {
       var response = await http.get(url);
@@ -49,13 +51,13 @@ class HomescreenController with ChangeNotifier {
       }
     } catch (e) {
       print(e);
-    }
+    }isloading = false;
     notifyListeners();
   }
 
   //* Fetch all products or products based on the selected category
   Future<void> getAllProduct() async {
-    isProductloading = true;
+    isloading = true;
     notifyListeners();
 
     final allCategoryProductUrl = Uri.parse(
@@ -72,12 +74,12 @@ class HomescreenController with ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    isProductloading = false;
+    isloading = false;
     notifyListeners();
   }
 
   onCategorySelection(String clicked) async {
-    if (selectedCategory != clicked && isProductloading == false) {
+    if (selectedCategory != clicked && isloading == false) {
       selectedCategory = clicked;
       notifyListeners();
     }

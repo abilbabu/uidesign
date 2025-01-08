@@ -6,7 +6,10 @@ import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
 import 'package:uidesign/view/home_screen/home_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FavoritesectionController.initDb();
+  await CartScreenController.initDb();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => HomescreenController(),
@@ -17,7 +20,7 @@ void main() {
     ChangeNotifierProvider(
       create: (context) => CartScreenController(),
     ),
-     ChangeNotifierProvider(
+    ChangeNotifierProvider(
       create: (context) => FavoritesectionController(),
     )
   ], child: MyApp()));

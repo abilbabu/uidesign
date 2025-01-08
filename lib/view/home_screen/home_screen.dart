@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
@@ -8,6 +9,7 @@ import 'package:uidesign/utils/constants/image_constants.dart';
 import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/home_screen/customwidgets/drawerButton.dart';
 import 'package:uidesign/view/home_screen/customwidgets/productcart.dart';
+import 'package:uidesign/view/product_description/product_description.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Global key for Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<HomescreenController>().getproduct();
         context.read<HomescreenController>().getCategory();
         context.read<HomescreenController>().getAllProduct();
+        context.read<FavoritesectionController>().getfavorite();
       },
     );
     super.initState();
@@ -35,127 +37,174 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey, // Assign the scaffold key for using drawer call
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildAppBar(), // AppBar
-              _buildSearchBar(), // Search Bar
-              _buildExploreSection(), // Explore Section
-              _buildCategorySection(), // category Section
-            ],
-          ),
+      key: _scaffoldKey,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildAppBar(),
+            _buildSearchBar(),
+            _buildExploreSection(),
+            _buildBestSellingSection(),
+          ],
         ),
-        drawer:const DrawerButtonscreen()); 
+      ),
+      drawer: const DrawerButtonscreen(),
+    );
   }
 
-  Widget _buildCategorySection() {
-    return Consumer<FavoritesectionController>(
-      builder: (context, FavoriteController, child) {
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-            child: Text(
-              'Categories',
-              style: AppStyle.getTextStyle(
-                fontSize: 28,
-                color: ColorConstants.textcolor,
-              ),
+  Widget _buildBestSellingSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Text(
+            'Best Selling',
+            style: AppStyle.getTextStyle(
+              fontSize: 28,
+              color: ColorConstants.textcolor,
             ),
           ),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                  children: List.generate(
-                FavoriteController.FavStore.length,
-                (index) {
-                  final favoriteItem = FavoriteController.FavStore[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: ColorConstants.boxShadow),
-                      child: Stack(
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                child: Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image:
-                                          NetworkImage(favoriteItem["image"]),
-                                      fit: BoxFit.fill,
+        ),
+        Consumer<FavoritesectionController>(
+          builder: (context, FavoriteController, child) {
+            return FavoriteController.isloading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                // ? Shimmer.fromColors(
+                //     baseColor: Colors.grey[300] ?? Colors.grey,
+                //     highlightColor: Colors.grey[100] ?? Colors.grey,
+                //     enabled: FavoriteController.isloading,
+                //     child: Container(
+                //       width: double.infinity,
+                //       height: 120,
+                //       color: Colors.white,
+                //     ),
+                //   )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: List.generate(
+                        FavoriteController.FavStore.length,
+                        (index) {
+                          final favoriteProduct =
+                              FavoriteController.FavStore[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: ColorConstants.boxShadow,
+                              ),
+                              child: Stack(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        child: Container(
+                                          width: 80,
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                  favoriteProduct["image"]),
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              favoriteProduct["title"],
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: AppStyle.getTextStyle(
+                                                fontSize: 18,
+                                                color: ColorConstants.textcolor,
+                                              ),
+                                            ),
+                                            Text(
+                                              favoriteProduct["description"],
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: AppStyle.getSubTextStyle(
+                                                fontSize: 16,
+                                                color: ColorConstants
+                                                    .textDescriptiontextcolor,
+                                              ),
+                                            ),
+                                            Text(
+                                              '\$${favoriteProduct["price"]}',
+                                              style: AppStyle.getPriceTextStyle(
+                                                fontSize: 16,
+                                                color: ColorConstants.textcolor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProductDescription(
+                                                productId:
+                                                    favoriteProduct["id"],
+                                              ),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: const Icon(
+                                            Icons.arrow_forward,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(favoriteItem["title"],
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyle.getTextStyle(
-                                            fontSize: 18,
-                                            color: ColorConstants.textcolor)),
-                                    Text(favoriteItem["description"],
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyle.getSubTextStyle(
-                                            fontSize: 16,
-                                            color: ColorConstants
-                                                .textDescriptiontextcolor)),
-                                    Text('\$${favoriteItem["price"]}',
-                                        style: AppStyle.getPriceTextStyle(
-                                            fontSize: 16,
-                                            color: ColorConstants.textcolor)),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   );
-                },
-              ))),
-        ]);
-      },
+          },
+        ),
+      ],
     );
   }
 
@@ -175,26 +224,53 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Consumer<HomescreenController>(
           builder: (context, productObj, child) {
-            return SizedBox(
-              height: 320,
-              child: ListView.separated(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  var product = productObj.productList[index];
-                  return ProductCart(
-                    image: product.image.toString(),
-                    title: product.title.toString(),
-                    description: product.description.toString(),
-                    price: product.price!,
-                    productId: product.id!,
+            return productObj.isloading
+                ? Shimmer.fromColors(
+                    baseColor: Colors.grey[300] ?? Colors.grey,
+                    highlightColor: Colors.grey[100] ?? Colors.grey,
+                    enabled: productObj.isloading,
+                    child: SizedBox(
+                      height: 320,
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return const ProductCart(
+                            image: '',
+                            title: '',
+                            description: '',
+                            price: 0,
+                            productId: 0,
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 30),
+                        itemCount: 2,
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 320,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        var product = productObj.productList[index];
+                        return ProductCart(
+                          image: product.image.toString(),
+                          title: product.title.toString(),
+                          description: product.description.toString(),
+                          price: product.price!,
+                          productId: product.id!,
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 30),
+                      itemCount: productObj.productList.length,
+                    ),
                   );
-                },
-                separatorBuilder: (context, index) => const SizedBox(width: 30),
-                itemCount: productObj.productList.length,
-              ),
-            );
           },
         ),
       ],
@@ -210,21 +286,25 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 280,
             height: 35,
             decoration: BoxDecoration(
-                color: const Color(0xFFF9F9F9),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: ColorConstants.boxShadow),
+              color: const Color(0xFFF9F9F9),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: ColorConstants.boxShadow,
+            ),
             child: TextField(
               decoration: InputDecoration(
                 hintText: "Search",
                 hintStyle: AppStyle.getSubTextStyle(
-                    fontSize: 14,
-                    color: ColorConstants.textDescriptiontextcolor),
+                  fontSize: 14,
+                  color: ColorConstants.textDescriptiontextcolor,
+                ),
                 prefixIcon:
                     const Image(image: AssetImage(ImageConstants.searchlogo)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(
-                      color: ColorConstants.textDescriptiontextcolor, width: 1),
+                    color: ColorConstants.textDescriptiontextcolor,
+                    width: 1,
+                  ),
                 ),
               ),
             ),
@@ -261,8 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               _scaffoldKey.currentState?.openDrawer();
             },
-            child: Image(
-                image: AssetImage(ImageConstants.drawer)), // Removed const
+            child: const Image(image: AssetImage(ImageConstants.drawer)),
           ),
           Container(
             padding:
@@ -271,8 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Image(
-                image: AssetImage(ImageConstants.profile)), // Removed const
+            child: const Image(image: AssetImage(ImageConstants.profile)),
           ),
         ],
       ),

@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uidesign/controller/cartscreen_controller.dart';
+import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
+import 'package:uidesign/model/productModel/productModel.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
 import 'package:uidesign/view/product_description/product_description.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   final String categoryName;
   const ProductScreen({super.key, required this.categoryName});
 
   @override
-  Widget build(BuildContext context) { 
+  State<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  Map<int, bool> _favoriteStates = {};
+
+  @override
+  Widget build(BuildContext context) {
     var categoryController = Provider.of<HomescreenController>(context);
-    bool isProductLoading = categoryController.isProductloading;
+    bool isProductLoading = categoryController.isloading;
 
     return Scaffold(
       body: Padding(
@@ -22,7 +32,7 @@ class ProductScreen extends StatelessWidget {
           shrinkWrap: true,
           children: [
             CustomAppBar(
-              title: categoryName,
+              title: widget.categoryName,
             ),
             isProductLoading
                 ? const Center(
@@ -44,13 +54,22 @@ class ProductScreen extends StatelessWidget {
                       var categoryProduct =
                           categoryController.categoryListData[index];
                       var productId = categoryProduct.id;
+
+                      if (productId == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      if (!_favoriteStates.containsKey(productId)) {
+                        _favoriteStates[productId] = false;
+                      }
+
                       return InkWell(
                         onTap: () {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  ProductDescription(productId: productId!),
+                                  ProductDescription(productId: productId),
                             ),
                             (route) => false,
                           );
@@ -93,10 +112,53 @@ class ProductScreen extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(
-                                            Icons.favorite_border,
+                                          onPressed: () {
+                                            setState(() {
+                                              _favoriteStates[productId] =
+                                                  !_favoriteStates[productId]!;
+                                            });
+
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text("Added to cart!"),
+                                                duration: Duration(seconds: 3),
+                                              ),
+                                            );
+
+                                            var product = ProductModel(
+                                              title: categoryProduct.title,
+                                              description:
+                                                  categoryProduct.description,
+                                              image: categoryProduct.image,
+                                              price: categoryProduct.price,
+                                              id: categoryProduct.id,
+                                            );
+                                            if (_favoriteStates[productId]!) {
+                                              context
+                                                  .read<
+                                                      FavoritesectionController>()
+                                                  .addFav(product);
+                                            } else {
+                                              context
+                                                  .read<
+                                                      FavoritesectionController>()
+                                                  .removefav(productId);
+                                            }
+                                            context
+                                                .read<
+                                                    FavoritesectionController>()
+                                                .getfavorite();
+                                          },
+                                          icon: Icon(
+                                            _favoriteStates[productId]!
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
                                             size: 25,
+                                            color: _favoriteStates[productId]!
+                                                ? ColorConstants.redcolor
+                                                : ColorConstants
+                                                    .textDescriptiontextcolor,
                                           ),
                                         ),
                                       ],
@@ -130,7 +192,28 @@ class ProductScreen extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      //
+                                      var product = ProductModel(
+                                        title: categoryProduct.title,
+                                        description:
+                                            categoryProduct.description,
+                                        image: categoryProduct.image,
+                                        price: categoryProduct.price,
+                                        id: categoryProduct.id,
+                                      );
+                                      context
+                                          .read<CartScreenController>()
+                                          .addProduct(product);
+                                      context
+                                          .read<CartScreenController>()
+                                          .getAllProduct();
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Added to cart!"),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
                                     },
                                     child: const CircleAvatar(
                                       radius: 22,

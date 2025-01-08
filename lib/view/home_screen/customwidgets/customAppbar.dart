@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/utils/constants/image_constants.dart';
+import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/home_screen/home_screen.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -45,10 +46,21 @@ class CustomAppBar extends StatelessWidget {
                           fontSize: 20, color: ColorConstants.textcolor)),
                 )
               : const SizedBox.shrink(),
-          const SizedBox(
-              width: 40,
-              height: 40,
-              child: Image(image: AssetImage(ImageConstants.cartlogo))),
+          InkWell(
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartScreen(),
+                ),
+                (route) => false,
+              );
+            },
+            child: const SizedBox(
+                width: 40,
+                height: 40,
+                child: Image(image: AssetImage(ImageConstants.cartlogo))),
+          ),
         ],
       ),
     );

@@ -1,45 +1,58 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:uidesign/model/productModel/productModel.dart';
 
 class FavoritesectionController with ChangeNotifier {
   static late Database database;
   List<Map<String, dynamic>> FavStore = [];
+  bool isloading = false;
 
-  static Future initDb() async {
-    database = await openDatabase("cartdbfav.Db", version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          'CREATE TABLE Cart (id INTEGER PRIMARY KEY, title TEXT, descrbtion TEXT, image TEXT, price REAL)');
-    });
+  static Future<void> initDb() async {
+    database = await openDatabase(
+      "cartdb2.Db",
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute(
+            'CREATE TABLE Cart (id INTEGER PRIMARY KEY, title TEXT, description TEXT, image TEXT, price REAL, productId INTEGER)');
+      },
+    );
   }
 
-  Future getfavorite() async {
+  getfavorite() async {
+    isloading = true;
+    notifyListeners();
     FavStore = await database.rawQuery('SELECT * FROM Cart');
     log(FavStore.toString());
+    isloading = false;
     notifyListeners();
   }
 
-  Future addFav(Map<String, dynamic> getFav) async {
-    bool alreadyInCart =
-        FavStore.any((element) => getFav["id"] == element["id"]);
+  Future<void> addFav(ProductModel getFav) async {
+    bool alreadyInCart = FavStore.any(
+      (element) => getFav.id == element["productId"],
+    );
+
     if (alreadyInCart) {
-      log("Already in cart");
-    } else {
-      await database.rawInsert(
-          'INSERT INTO Cart(title, descrbtion, image, price, ) VALUES(?, ?, ?, ?)',
-          [
-            getFav["title"],
-            getFav["descrbtion"],
-            getFav["image"],
-            getFav["price"],
-          ]);
+      log("Already in favorites");
+      return;
     }
-    notifyListeners();
+    await database.rawInsert(
+      'INSERT INTO Cart(title, description, image, price, productId) VALUES(?, ?, ?, ?, ?)',
+      [
+        getFav.title,
+        getFav.description,
+        getFav.image,
+        getFav.price,
+        getFav.id,
+      ],
+    );
+    getfavorite();
   }
 
-  Future removefav(int id) async {
-    await database.rawDelete('DELETE FROM Cart WHERE id = ?', [id]);
+  Future<void> removefav(int productId) async {
+    await database
+        .rawDelete('DELETE FROM Cart WHERE productId = ?', [productId]);
     getfavorite();
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uidesign/controller/cartscreen_controller.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
+import 'package:uidesign/model/productModel/productModel.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
+import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
 
 class ProductDescription extends StatefulWidget {
@@ -32,21 +35,17 @@ class _ProductDescriptionState extends State<ProductDescription> {
     return Scaffold(
       body: Consumer<ProductdescriptionController>(
         builder: (context, value, child) {
-          // If loading, show a loading spinner
           if (value.isloading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          // If no product, show a message
           if (value.product == null) {
             return const Center(
               child: Text('Product not found'),
             );
           }
-
-          // The product is available, build the product description page
           return Stack(
             children: [
               SingleChildScrollView(
@@ -162,7 +161,24 @@ class _ProductDescriptionState extends State<ProductDescription> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      print("haiiii");
+                      var product = ProductModel(
+                        title: value.product!.title!,
+                        description: value.product!.description!,
+                        image: value.product!.image!,
+                        price: value.product!.price!,
+                        id: widget.productId,
+                      );
+
+                      context.read<CartScreenController>().addProduct(product);
+                      context.read<CartScreenController>().getAllProduct();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CartScreen(),
+                          ));
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
