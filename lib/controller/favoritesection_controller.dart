@@ -23,7 +23,7 @@ class FavoritesectionController with ChangeNotifier {
     isloading = true;
     notifyListeners();
     FavStore = await database.rawQuery('SELECT * FROM Cart');
-    log(FavStore.toString());
+    // log(FavStore.toString());
     isloading = false;
     notifyListeners();
   }

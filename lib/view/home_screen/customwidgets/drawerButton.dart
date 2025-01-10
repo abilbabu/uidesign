@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
@@ -26,20 +25,20 @@ class _DrawerButtonscreenState extends State<DrawerButtonscreen> {
     return Drawer(
       child: Consumer<HomescreenController>(
         builder: (context, categoryController, child) {
-          if (categoryController.isloading) {
+          if (categoryController.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
           return Column(
             children: [
-             const DrawerHeader(
+              const DrawerHeader(
                 child: Text('Categories', style: TextStyle(fontSize: 24)),
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: categoryController.catecoryList.length,
+                  itemCount: categoryController.categoryList.length,
                   itemBuilder: (context, index) {
-                    String category = categoryController.catecoryList[index];
+                    String category = categoryController.categoryList[index];
                     return Padding(
                       padding: const EdgeInsets.all(10),
                       child: Container(

@@ -3,12 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
+import 'package:uidesign/controller/searchscreen_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/utils/constants/image_constants.dart';
 import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/home_screen/customwidgets/drawerButton.dart';
 import 'package:uidesign/view/home_screen/customwidgets/productcart.dart';
+import 'package:uidesign/view/home_screen/search_screen/search_screen.dart';
 import 'package:uidesign/view/product_description/product_description.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,9 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        context.read<HomescreenController>().getproduct();
+        context.read<HomescreenController>().getProduct();
+        context.read<SearchscreenController>().getAllProduct();
         context.read<HomescreenController>().getCategory();
-        context.read<HomescreenController>().getAllProduct();
+        context.read<HomescreenController>().getCategoryAllProduct();
         context.read<FavoritesectionController>().getfavorite();
       },
     );
@@ -70,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Consumer<FavoritesectionController>(
           builder: (context, FavoriteController, child) {
             return FavoriteController.isloading
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 // ? Shimmer.fromColors(
@@ -224,11 +227,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Consumer<HomescreenController>(
           builder: (context, productObj, child) {
-            return productObj.isloading
+            return productObj.isLoading
                 ? Shimmer.fromColors(
                     baseColor: Colors.grey[300] ?? Colors.grey,
                     highlightColor: Colors.grey[100] ?? Colors.grey,
-                    enabled: productObj.isloading,
+                    enabled: productObj.isLoading,
                     child: SizedBox(
                       height: 320,
                       child: ListView.separated(
@@ -291,6 +294,22 @@ class _HomeScreenState extends State<HomeScreen> {
               boxShadow: ColorConstants.boxShadow,
             ),
             child: TextField(
+              onChanged: (query) {
+                // Trigger filtering as the user types
+                Provider.of<SearchscreenController>(context, listen: false)
+                    .filterProduct(query);
+              },
+              onSubmitted: (query) {
+                // Trigger filtering when the user presses "Enter"
+                Provider.of<SearchscreenController>(context, listen: false)
+                    .filterProduct(query);
+
+                // Optionally navigate to the search screen after submitting
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SearchScreen()),
+                );
+              },
               decoration: InputDecoration(
                 hintText: "Search",
                 hintStyle: AppStyle.getSubTextStyle(

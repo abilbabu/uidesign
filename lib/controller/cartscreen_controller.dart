@@ -22,7 +22,7 @@ class CartScreenController with ChangeNotifier {
 
   Future<void> getAllProduct() async {
     storedProducts = await database.rawQuery('SELECT * FROM Cart');
-    log(storedProducts.toString());
+    // log(storedProducts.toString());
     calculateTotalAmount();
     notifyListeners();
   }
@@ -74,7 +74,7 @@ class CartScreenController with ChangeNotifier {
     for (var product in storedProducts) {
       totalCartvalue += product["qty"] * product["price"];
     }
-    log("Total Cart Value: $totalCartvalue");
+    // log("Total Cart Value: $totalCartvalue");
   }
 
   cleardata() async {

@@ -23,7 +23,7 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     var categoryController = Provider.of<HomescreenController>(context);
-    bool isProductLoading = categoryController.isloading;
+    bool isProductLoading = categoryController.isLoading;
 
     return Scaffold(
       body: Padding(

@@ -4,6 +4,7 @@ import 'package:uidesign/controller/cartscreen_controller.dart';
 import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
+import 'package:uidesign/controller/searchscreen_controller.dart';
 import 'package:uidesign/view/home_screen/home_screen.dart';
 
 Future<void> main() async {
@@ -19,6 +20,9 @@ Future<void> main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => CartScreenController(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => SearchscreenController(),
     ),
     ChangeNotifierProvider(
       create: (context) => FavoritesectionController(),
