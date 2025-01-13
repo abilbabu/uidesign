@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/cartscreen_controller.dart';
 import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/model/productModel/productModel.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
-import 'package:uidesign/view/product_description/product_description.dart';
+
 
 class ProductCart extends StatefulWidget {
   final String image;
@@ -34,15 +35,8 @@ class _ProductCartState extends State<ProductCart> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDescription(
-              productId: widget.productId,
-            ),
-          ),
-          (route) => false,
-        );
+        context.pushNamed('product_description',
+            pathParameters: {'productId': widget.productId.toString()});
       },
       child: Container(
         width: 220,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
-import 'package:uidesign/view/home_screen/product_screen/product_screen.dart';
 
 class DrawerButtonscreen extends StatefulWidget {
   const DrawerButtonscreen({super.key});
@@ -54,14 +54,12 @@ class _DrawerButtonscreenState extends State<DrawerButtonscreen> {
                           title: Text(category),
                           onTap: () {
                             categoryController.onCategorySelection(category);
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductScreen(categoryName: category),
-                              ),
-                            );
+                            context.pushNamed(
+                              'product_screen',
+                              pathParameters: {
+                                'categoryName': category,
+                              },
+                            );// route pass
                           },
                         ),
                       ),

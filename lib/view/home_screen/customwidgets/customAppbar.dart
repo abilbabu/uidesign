@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/utils/constants/image_constants.dart';
-import 'package:uidesign/view/cart_screen/cart_screen.dart';
-import 'package:uidesign/view/home_screen/home_screen.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String? title;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +24,7 @@ class CustomAppBar extends StatelessWidget {
             backgroundColor: ColorConstants.textDescriptiontextcolor,
             child: IconButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
-                  ),
-                  (route) => false,
-                );
+                context.pushNamed('home_screen');// route pass
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -48,13 +41,7 @@ class CustomAppBar extends StatelessWidget {
               : const SizedBox.shrink(),
           InkWell(
             onTap: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CartScreen(),
-                ),
-                (route) => false,
-              );
+              context.pushNamed('cart_screen');
             },
             child: const SizedBox(
                 width: 40,

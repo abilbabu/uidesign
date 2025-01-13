@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/cartscreen_controller.dart';
 import 'package:uidesign/controller/favoritesection_controller.dart';
@@ -7,7 +8,7 @@ import 'package:uidesign/model/productModel/productModel.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
-import 'package:uidesign/view/product_description/product_description.dart';
+
 
 class ProductScreen extends StatefulWidget {
   final String categoryName;
@@ -65,15 +66,11 @@ class _ProductScreenState extends State<ProductScreen> {
 
                       return InkWell(
                         onTap: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDescription(productId: productId),
-                            ),
-                            (route) => false,
-                          );
-                        },
+                          context.pushNamed('product_description',
+                              pathParameters: {
+                                'productId': categoryProduct.id.toString(),
+                              });
+                        },// route pass
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(

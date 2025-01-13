@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uidesign/controller/cartscreen_controller.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/model/productModel/productModel.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
-import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
 
 class ProductDescription extends StatefulWidget {
   final int productId;
+
+  static var route;
 
   const ProductDescription({super.key, required this.productId});
 
@@ -173,11 +175,7 @@ class _ProductDescriptionState extends State<ProductDescription> {
 
                       context.read<CartScreenController>().addProduct(product);
                       context.read<CartScreenController>().getAllProduct();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CartScreen(),
-                          ));
+                      context.pushNamed('cart_screen'); // route pass
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

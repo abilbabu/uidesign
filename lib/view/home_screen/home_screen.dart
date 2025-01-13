@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uidesign/controller/favoritesection_controller.dart';
@@ -7,13 +8,12 @@ import 'package:uidesign/controller/searchscreen_controller.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/utils/constants/image_constants.dart';
-import 'package:uidesign/view/cart_screen/cart_screen.dart';
 import 'package:uidesign/view/home_screen/customwidgets/drawerButton.dart';
 import 'package:uidesign/view/home_screen/customwidgets/productcart.dart';
-import 'package:uidesign/view/home_screen/search_screen/search_screen.dart';
-import 'package:uidesign/view/product_description/product_description.dart';
 
 class HomeScreen extends StatefulWidget {
+  static var route;
+
   const HomeScreen({super.key});
 
   @override
@@ -76,16 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                // ? Shimmer.fromColors(
-                //     baseColor: Colors.grey[300] ?? Colors.grey,
-                //     highlightColor: Colors.grey[100] ?? Colors.grey,
-                //     enabled: FavoriteController.isloading,
-                //     child: Container(
-                //       width: double.infinity,
-                //       height: 120,
-                //       color: Colors.white,
-                //     ),
-                //   )
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -169,17 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding: const EdgeInsets.all(15),
                                       child: InkWell(
                                         onTap: () {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductDescription(
-                                                productId:
-                                                    favoriteProduct["id"],
-                                              ),
-                                            ),
-                                            (route) => false,
-                                          );
+                                          context.pushNamed(
+                                              'product_description',
+                                              pathParameters: {
+                                                'productId':
+                                                   favoriteProduct['id'].toString(),
+                                              });// route pass
+                                         
                                         },
                                         child: Container(
                                           width: 30,
@@ -295,20 +281,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: TextField(
               onChanged: (query) {
-                // Trigger filtering as the user types
                 Provider.of<SearchscreenController>(context, listen: false)
                     .filterProduct(query);
               },
               onSubmitted: (query) {
-                // Trigger filtering when the user presses "Enter"
                 Provider.of<SearchscreenController>(context, listen: false)
                     .filterProduct(query);
-
-                // Optionally navigate to the search screen after submitting
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SearchScreen()),
-                );
+                context.pushNamed('search_screen');// route pass
               },
               decoration: InputDecoration(
                 hintText: "Search",
@@ -331,13 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 20),
           InkWell(
             onTap: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CartScreen(),
-                ),
-                (route) => false,
-              );
+              context.pushNamed("cart_screen");// route pass
             },
             child: const SizedBox(
               width: 30,

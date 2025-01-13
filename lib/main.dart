@@ -5,7 +5,8 @@ import 'package:uidesign/controller/favoritesection_controller.dart';
 import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
 import 'package:uidesign/controller/searchscreen_controller.dart';
-import 'package:uidesign/view/home_screen/home_screen.dart';
+import 'package:uidesign/route_services/route_services.dart';
+// import 'package:uidesign/view/home_screen/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,9 +36,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      routerConfig: router,// route pass
     );
   }
 }
