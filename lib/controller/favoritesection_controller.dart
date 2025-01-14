@@ -48,11 +48,13 @@ class FavoritesectionController with ChangeNotifier {
       ],
     );
     getfavorite();
+    notifyListeners();
   }
 
   Future<void> removefav(int productId) async {
     await database
         .rawDelete('DELETE FROM Cart WHERE productId = ?', [productId]);
     getfavorite();
+    notifyListeners();
   }
 }

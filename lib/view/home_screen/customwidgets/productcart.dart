@@ -7,7 +7,6 @@ import 'package:uidesign/model/productModel/productModel.dart';
 import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 
-
 class ProductCart extends StatefulWidget {
   final String image;
   final String title;
@@ -29,8 +28,6 @@ class ProductCart extends StatefulWidget {
 }
 
 class _ProductCartState extends State<ProductCart> {
-  bool _isFavorited = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -67,44 +64,50 @@ class _ProductCartState extends State<ProductCart> {
                   Positioned(
                     right: 5,
                     top: 10,
-                    child: IconButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Added to cart!"),
-                            duration: Duration(seconds: 3),
+                    child: Consumer<FavoritesectionController>(
+                      builder: (context, favoriteController, child) {
+                        bool _isFavorited = favoriteController.FavStore.any(
+                          (element) => element["productId"] == widget.productId,
+                        );
+
+                        return IconButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Added to Favorites!"),
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
+
+                            setState(() {
+                              _isFavorited = !_isFavorited;
+                            });
+
+                            var product = ProductModel(
+                              title: widget.title,
+                              description: widget.description,
+                              image: widget.image,
+                              price: widget.price,
+                              id: widget.productId,
+                            );
+
+                            if (_isFavorited) {
+                              favoriteController.addFav(product);
+                            } else {
+                              favoriteController.removefav(widget.productId);
+                            }
+                          },
+                          icon: Icon(
+                            _isFavorited
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            size: 25,
+                            color: _isFavorited
+                                ? ColorConstants.redcolor
+                                : ColorConstants.textDescriptiontextcolor,
                           ),
                         );
-                        setState(() {
-                          _isFavorited = !_isFavorited;
-                        });
-                        print("haiiii");
-
-                        var product = ProductModel(
-                          title: widget.title,
-                          description: widget.description,
-                          image: widget.image,
-                          price: widget.price,
-                          id: widget.productId,
-                        );
-                        if (_isFavorited) {
-                          context
-                              .read<FavoritesectionController>()
-                              .addFav(product);
-                        } else {
-                          context
-                              .read<FavoritesectionController>()
-                              .removefav(widget.productId);
-                        }
-                        context.read<FavoritesectionController>().getfavorite();
                       },
-                      icon: Icon(
-                        _isFavorited ? Icons.favorite : Icons.favorite_border,
-                        size: 25,
-                        color: _isFavorited
-                            ? ColorConstants.redcolor
-                            : ColorConstants.textDescriptiontextcolor,
-                      ),
                     ),
                   ),
                 ],
@@ -128,8 +131,7 @@ class _ProductCartState extends State<ProductCart> {
                       style: AppStyle.getPriceTextStyle(
                           fontSize: 15, color: ColorConstants.textcolor)),
                   InkWell(
-                    onTap: () {
-                      print("haiiii");
+                    onTap: () async {
                       var product = ProductModel(
                         title: widget.title,
                         description: widget.description,
@@ -137,19 +139,29 @@ class _ProductCartState extends State<ProductCart> {
                         price: widget.price,
                         id: widget.productId,
                       );
-                      context.read<CartScreenController>().addProduct(product);
-                      context.read<CartScreenController>().getAllProduct();
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => CartScreen(),
-                      //     ));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Added to cart!"),
-                          duration: Duration(seconds: 3),
-                        ),
-                      );
+
+                      bool isProductInCart = await context
+                          .read<CartScreenController>()
+                          .isProductInCart(widget.productId);
+
+                      if (!isProductInCart) {
+                        await context
+                            .read<CartScreenController>()
+                            .addProduct(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Added to cart!"),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Already added cart!"),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
                     },
                     child: const CircleAvatar(
                       radius: 22,
@@ -160,7 +172,7 @@ class _ProductCartState extends State<ProductCart> {
                         size: 35,
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ],

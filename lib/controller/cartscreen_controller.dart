@@ -22,12 +22,13 @@ class CartScreenController with ChangeNotifier {
 
   Future<void> getAllProduct() async {
     storedProducts = await database.rawQuery('SELECT * FROM Cart');
-    // log(storedProducts.toString());
+    log(storedProducts.toString());
     calculateTotalAmount();
     notifyListeners();
   }
 
   addProduct(ProductModel getProduct) async {
+    await getAllProduct();
     bool alreadyCart = storedProducts.any(
       (element) => getProduct.id == element["productId"],
     );
@@ -46,27 +47,39 @@ class CartScreenController with ChangeNotifier {
         ],
       );
       getAllProduct();
+      notifyListeners();
     }
+  }
+
+  incrementQty({required int currentQty, required int id}) async {
+    await database
+        .rawUpdate('UPDATE Cart SET qty  = ? WHERE id = ?', [++currentQty, id]);
+    await getAllProduct();
     notifyListeners();
   }
 
-  incrementQty({required int currentQty, required int id}) {
-    database
-        .rawUpdate('UPDATE Cart SET qty  = ? WHERE id = ?', [++currentQty, id]);
-    getAllProduct();
+  decrementQty({required int currentQty, required int id}) async {
+    if (currentQty > 1) {
+      await database.rawUpdate(
+          'UPDATE Cart SET qty  = ? WHERE id = ?', [--currentQty, id]);
+      await getAllProduct();
+      notifyListeners();
+    }
   }
 
-  decrementQty({required int currentQty, required int id}) {
-    if (currentQty > 1) {
-      database.rawUpdate(
-          'UPDATE Cart SET qty  = ? WHERE id = ?', [--currentQty, id]);
-      getAllProduct();
-    }
+  // already add
+  Future<bool> isProductInCart(int productId) async {
+    List<Map<String, dynamic>> result = await database.rawQuery(
+      'SELECT * FROM Cart WHERE productId = ?',
+      [productId],
+    );
+    return result.isNotEmpty;
   }
 
   removeProduct(int id) async {
     await database.rawDelete('DELETE FROM Cart WHERE id  = ?', [id]);
-    getAllProduct();
+    await getAllProduct();
+    notifyListeners();
   }
 
   void calculateTotalAmount() {
@@ -79,6 +92,7 @@ class CartScreenController with ChangeNotifier {
 
   cleardata() async {
     await database.delete("Cart");
-    getAllProduct();
+    await getAllProduct();
+    notifyListeners();
   }
 }

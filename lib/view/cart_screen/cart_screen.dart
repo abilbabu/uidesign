@@ -5,8 +5,20 @@ import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<CartScreenController>(context, listen: false).getAllProduct();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +188,8 @@ class CartScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(12),
               child: Container(
-                padding:const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 height: 75,
                 decoration: BoxDecoration(
                     color: Colors.black,
@@ -187,7 +200,7 @@ class CartScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         const Text(
+                          const Text(
                             "Total Amount:-",
                             style: TextStyle(
                                 color: const Color(0xFFC1C1C1),
@@ -196,7 +209,7 @@ class CartScreen extends StatelessWidget {
                           ),
                           Text(
                             "\$ ${CartController.totalCartvalue.toStringAsFixed(2)}",
-                            style:const TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16),
@@ -207,11 +220,11 @@ class CartScreen extends StatelessWidget {
                     InkWell(
                       onTap: () {},
                       child: Container(
-                        padding:const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(14)),
-                        child:const Row(
+                        child: const Row(
                           children: [
                             Text(
                               "CHECKOUT",

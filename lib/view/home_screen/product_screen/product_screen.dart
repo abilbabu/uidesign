@@ -9,7 +9,6 @@ import 'package:uidesign/utils/constants/app_style.dart';
 import 'package:uidesign/utils/constants/color_constants.dart';
 import 'package:uidesign/view/home_screen/customwidgets/customAppbar.dart';
 
-
 class ProductScreen extends StatefulWidget {
   final String categoryName;
   const ProductScreen({super.key, required this.categoryName});
@@ -70,7 +69,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               pathParameters: {
                                 'productId': categoryProduct.id.toString(),
                               });
-                        },// route pass
+                        }, // route pass
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -106,22 +105,30 @@ class _ProductScreenState extends State<ProductScreen> {
                                   Positioned(
                                     right: 5,
                                     top: 10,
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _favoriteStates[productId] =
-                                                  !_favoriteStates[productId]!;
-                                            });
+                                    child: Consumer<FavoritesectionController>(
+                                      builder:
+                                          (context, favoriteController, child) {
+                                        bool _isFavorited =
+                                            favoriteController.FavStore.any(
+                                          (element) =>
+                                              element["productId"] ==
+                                              categoryProduct.id,
+                                        );
 
+                                        return IconButton(
+                                          onPressed: () {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
-                                                content: Text("Added to cart!"),
+                                                content:
+                                                    Text("Added to Favorites!"),
                                                 duration: Duration(seconds: 3),
                                               ),
                                             );
+
+                                            setState(() {
+                                              _isFavorited = !_isFavorited;
+                                            });
 
                                             var product = ProductModel(
                                               title: categoryProduct.title,
@@ -131,34 +138,27 @@ class _ProductScreenState extends State<ProductScreen> {
                                               price: categoryProduct.price,
                                               id: categoryProduct.id,
                                             );
-                                            if (_favoriteStates[productId]!) {
-                                              context
-                                                  .read<
-                                                      FavoritesectionController>()
+
+                                            if (_isFavorited) {
+                                              favoriteController
                                                   .addFav(product);
                                             } else {
-                                              context
-                                                  .read<
-                                                      FavoritesectionController>()
-                                                  .removefav(productId);
+                                              favoriteController.removefav(
+                                                  categoryProduct.id!);
                                             }
-                                            context
-                                                .read<
-                                                    FavoritesectionController>()
-                                                .getfavorite();
                                           },
                                           icon: Icon(
-                                            _favoriteStates[productId]!
+                                            _isFavorited
                                                 ? Icons.favorite
                                                 : Icons.favorite_border,
                                             size: 25,
-                                            color: _favoriteStates[productId]!
+                                            color: _isFavorited
                                                 ? ColorConstants.redcolor
                                                 : ColorConstants
                                                     .textDescriptiontextcolor,
                                           ),
-                                        ),
-                                      ],
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],
@@ -188,7 +188,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         color: ColorConstants.textcolor),
                                   ),
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       var product = ProductModel(
                                         title: categoryProduct.title,
                                         description:
@@ -197,20 +197,31 @@ class _ProductScreenState extends State<ProductScreen> {
                                         price: categoryProduct.price,
                                         id: categoryProduct.id,
                                       );
-                                      context
-                                          .read<CartScreenController>()
-                                          .addProduct(product);
-                                      context
-                                          .read<CartScreenController>()
-                                          .getAllProduct();
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text("Added to cart!"),
-                                          duration: Duration(seconds: 3),
-                                        ),
-                                      );
+                                      // Check if the product is already in the cart
+                                     bool isProductInCart = await context.read<CartScreenController>().isProductInCart(product.id!);
+
+                                      if (!isProductInCart) {
+                                        await context
+                                            .read<CartScreenController>()
+                                            .addProduct(product);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text("Added to cart!"),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content:
+                                                Text("Already added cart!"),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
                                     },
                                     child: const CircleAvatar(
                                       radius: 22,

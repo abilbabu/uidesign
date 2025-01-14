@@ -163,9 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               'product_description',
                                               pathParameters: {
                                                 'productId':
-                                                   favoriteProduct['id'].toString(),
-                                              });// route pass
-                                         
+                                                    favoriteProduct['id']
+                                                        .toString(),
+                                              });
                                         },
                                         child: Container(
                                           width: 30,
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         var product = productObj.productList[index];
                         return ProductCart(
-                          image: product.image.toString(),
+                          image: product.image ?? '',
                           title: product.title.toString(),
                           description: product.description.toString(),
                           price: product.price!,
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onSubmitted: (query) {
                 Provider.of<SearchscreenController>(context, listen: false)
                     .filterProduct(query);
-                context.pushNamed('search_screen');// route pass
+                context.pushNamed('search_screen'); // route
               },
               decoration: InputDecoration(
                 hintText: "Search",
@@ -310,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 20),
           InkWell(
             onTap: () {
-              context.pushNamed("cart_screen");// route pass
+              context.pushNamed("cart_screen");
             },
             child: const SizedBox(
               width: 30,

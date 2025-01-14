@@ -6,12 +6,12 @@ import 'package:uidesign/controller/productdescription_controller.dart';
 import 'package:uidesign/controller/homescreen_controller.dart';
 import 'package:uidesign/controller/searchscreen_controller.dart';
 import 'package:uidesign/route_services/route_services.dart';
-// import 'package:uidesign/view/home_screen/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FavoritesectionController.initDb();
   await CartScreenController.initDb();
+  await FavoritesectionController.initDb();
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => HomescreenController(),
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: router,// route pass
+      routerConfig: router,
     );
   }
 }
