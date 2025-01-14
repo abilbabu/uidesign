@@ -225,17 +225,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             horizontal: 20, vertical: 10),
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          return const ProductCart(
-                            image: '',
-                            title: '',
-                            description: '',
-                            price: 0,
-                            productId: 0,
+                          return ProductCart(
+                            image: productObj.productList[index].image ?? '',
+                            title:
+                                productObj.productList[index].title.toString(),
+                            description: productObj
+                                .productList[index].description
+                                .toString(),
+                            price: productObj.productList[index].price!,
+                            productId: productObj.productList[index].id!,
                           );
                         },
                         separatorBuilder: (context, index) =>
                             const SizedBox(width: 30),
-                        itemCount: 2,
+                        itemCount: productObj.productList.length,
                       ),
                     ),
                   )
@@ -335,14 +338,19 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: const Image(image: AssetImage(ImageConstants.drawer)),
           ),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 3.25, vertical: 2.17),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(10),
+          InkWell(
+            onTap: () {
+              context.pushNamed("profile_screen");
+            },
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 3.25, vertical: 2.17),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Image(image: AssetImage(ImageConstants.profile)),
             ),
-            child: const Image(image: AssetImage(ImageConstants.profile)),
           ),
         ],
       ),

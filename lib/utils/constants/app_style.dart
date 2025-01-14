@@ -31,4 +31,13 @@ class AppStyle {
       color: color,
     );
   }
+  static TextStyle getTitleStyle(
+      {required double fontSize, Color? color, bool isCurrency = false}) {
+    return TextStyle(
+      fontSize: fontSize,
+      fontFamily: isCurrency ? null : "Poppins",
+      fontWeight: FontWeight.bold,
+      color: color,
+    );
+  }
 }

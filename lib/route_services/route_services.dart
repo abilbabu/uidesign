@@ -4,6 +4,7 @@ import 'package:uidesign/view/home_screen/home_screen.dart';
 import 'package:uidesign/view/home_screen/product_screen/product_screen.dart';
 import 'package:uidesign/view/home_screen/search_screen/search_screen.dart';
 import 'package:uidesign/view/product_description/product_description.dart';
+import 'package:uidesign/view/profile_screen/profile_screen.dart';
 
 final router = GoRouter(initialLocation: '/home_screen', routes: [
   GoRoute(
@@ -53,6 +54,14 @@ final router = GoRouter(initialLocation: '/home_screen', routes: [
     name: "search_screen",
     builder: (context, state) {
       return SearchScreen();
+    },
+  ),
+
+  GoRoute(
+    path: "/profile_screen",
+    name: "profile_screen",
+    builder: (context, state) {
+      return ProfileScreen();
     },
   ),
 ]);

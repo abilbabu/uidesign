@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:uidesign/model/productModel/productModel.dart';
+import 'package:uidesign/utils/api_services.dart';
 
 class ProductdescriptionController with ChangeNotifier {
   ProductModel? product;
@@ -10,7 +11,8 @@ class ProductdescriptionController with ChangeNotifier {
   getproductDetail(int productId) async {
     isloading = true;
     notifyListeners();
-    final url = Uri.parse("https://fakestoreapi.com/products/$productId");
+
+    final url = Uri.parse(ApiServices.productDescription(productId));
 
     try {
       var response = await http.get(url);

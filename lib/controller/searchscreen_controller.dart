@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:uidesign/model/productModel/productModel.dart';
+import 'package:uidesign/utils/api_services.dart';
 
 class SearchscreenController with ChangeNotifier {
   List<ProductModel> productAllList = [];
@@ -12,8 +13,7 @@ class SearchscreenController with ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final allProductUrl =
-        Uri.parse("https://fakestoreapi.com/products?sort=desc");
+    final allProductUrl = Uri.parse(ApiServices.searchUrl);
     try {
       var response = await http.get(allProductUrl);
       if (response.statusCode == 200) {
